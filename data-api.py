@@ -14,6 +14,10 @@ from google.cloud import storage
 import google.auth
 import ffmpeg
 import shutil
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+import warnings
+warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
 
 VIDEO_LENTH_MINUTES = 5
 SECONDS_BEFORE_EVENT = 10
@@ -31,7 +35,7 @@ def query_flat(args, sensors):
           f'-X POST \\\n'
           f'-H "Content-Type: application/json" \\\n'
           f'-H "X-API-KEY: {args.key}"')
-    r = requests.post(url, data=json.dumps(data), headers=headers)
+    r = requests.post(url, data=json.dumps(data), verify=False, headers=headers)
     r.raise_for_status()
     return r.json()
 
